@@ -42,23 +42,22 @@ module.exports = (batchSize, parallel) => {
     const test = () => {
       console.log(`Model has been trained with ${batchSize} examples, trying to predict ${TEST_BATCH_SIZE} test models`);
       const data = dataset.slice(batchSize, batchSize + TEST_BATCH_SIZE);
-      let correctQuesses = 0;
-      data.forEach(record => {
+      const correctQuesses = data.reduce((acc, record) => {
         const guess = classifier.classify(record.SentimentText);
         const correct = guess == record.Sentiment;
         //console.log(`"${record.SentimentText}": guess: ${guess} / actual: ${record.Sentiment}`, `matched: ${correct}`);
-        if (correct) correctQuesses++;
-      });
+        return correct ? acc + 1 : acc;
+      }, 0);
 
-      console.log(`Model's precision: ${((100 * correctQuesses)/TEST_BATCH_SIZE).toFixed(2)} %`);
+      console.log(`Model's precision: ${((100 * correctQuesses) / TEST_BATCH_SIZE).toFixed(2)} %`);
     };
 
     const singleThreadTraining = () => {
       try {
         classifier.train();
+        console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
         test();
         resolve(classifier);
-        console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
       } catch (err) {
         reject(err);
       }
