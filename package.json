@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/VitaliiBorodii/node-code-samples#readme",
   "dependencies": {
-    "salient": "^0.2.1"
+    "natural": "^0.5.1"
   }
 }
