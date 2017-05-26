@@ -8,7 +8,7 @@ const natural = require('natural');
 const classifier = new natural.BayesClassifier();
 
 const MAX_BATCH_SUCCESS = 1000;
-
+const TEST_BATCH_SIZE = 500;
 /*
  * For 100000 records:
  * adding took `20.9 seconds`
@@ -39,9 +39,24 @@ module.exports = (batchSize, parallel) => {
 
     console.log('Finish adding records', `it took ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
 
+    const test = () => {
+      console.log(`Model has been trained with ${batchSize} examples, trying to predict ${TEST_BATCH_SIZE} test models`);
+      const data = dataset.slice(batchSize, batchSize + TEST_BATCH_SIZE);
+      let correctQuesses = 0;
+      data.forEach(record => {
+        const guess = classifier.classify(record.SentimentText);
+        const correct = guess == record.Sentiment;
+        //console.log(`"${record.SentimentText}": guess: ${guess} / actual: ${record.Sentiment}`, `matched: ${correct}`);
+        if (correct) correctQuesses++;
+      });
+
+      console.log(`Model's precision: ${((100 * correctQuesses)/TEST_BATCH_SIZE).toFixed(2)} %`);
+    };
+
     const singleThreadTraining = () => {
       try {
         classifier.train();
+        test();
         resolve(classifier);
         console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
       } catch (err) {
@@ -61,6 +76,7 @@ module.exports = (batchSize, parallel) => {
           return reject(result);
         }
         console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+        test();
         resolve(classifier);
       });
     };

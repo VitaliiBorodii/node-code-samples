@@ -7,7 +7,7 @@ const rl = readline.createInterface({
 });
 
 let startTime = Date.now();
-nlp(10000, false)
+nlp(20000, false)
   .then((model) => {
     console.log(`Ready for work in: ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
     enterPhrase(model);
