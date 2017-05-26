@@ -17,6 +17,31 @@ const add = (x, y) => {
   return r.join('');
 };
 
+const q2h = (quat) => {
+  let acc = '';
+
+  quat = quat.length % 2 ? `0${quat}` : quat;
+  for (let i = 0; i < quat.length; i += 2) {
+    const token = quat.slice(i, i + 2);
+    const hex = parseInt(token, 4).toString(16);
+    acc += hex
+  }
+  return acc;
+};
+
+const h2q = (hex) => {
+  let acc = '';
+
+  for (let i = 0; i < hex.length; i++) {
+    const token = hex.slice(i, i + 1);
+    let quat = parseInt(token, 16).toString(4);
+    quat = quat.length < 2 ? `0${quat}` : quat;
+    acc += quat
+  }
+
+  return acc
+};
+
 const h2d = (s) => {
 
   let dec = '0';
