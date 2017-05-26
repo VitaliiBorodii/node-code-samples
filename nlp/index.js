@@ -1,4 +1,4 @@
-const nlp = require('./nlp/nlp');
+const nlp = require('./nlp');
 const readline = require('readline');
 
 const rl = readline.createInterface({
