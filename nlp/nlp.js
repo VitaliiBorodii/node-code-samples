@@ -2,7 +2,7 @@ const os = require('os');
 let startTime = Date.now();
 console.log('Parsing JSON dataset');
 const dataset = require('./data/Sentiment_Analysis_Dataset.json');
-console.log('Finished parsing JSON', `it took ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+console.log(`Finished parsing JSON in ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
 
 const natural = require('natural');
 const classifier = new natural.BayesClassifier();
@@ -30,17 +30,17 @@ module.exports = (batchSize, parallel) => {
   return new Promise((resolve, reject) => {
 
     startTime = Date.now();
-    console.log(`Start adding ${batchSize} test records to model`);
+    console.log(`Start adding ${batchSize} training records to model`);
     batchSize = batchSize || undefined;
     const data = dataset.slice(0, batchSize);
     data.forEach((record) => {
       classifier.addDocument(record.SentimentText, record.Sentiment);
     });
 
-    console.log('Finish adding records', `it took ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+    console.log(`Finished adding records in ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
 
     const test = () => {
-      console.log(`Model has been trained with ${batchSize} examples, trying to predict ${TEST_BATCH_SIZE} test models`);
+      console.log(`Model has been trained with ${batchSize} training records, trying to predict ${TEST_BATCH_SIZE} test examples`);
       const data = dataset.slice(batchSize, batchSize + TEST_BATCH_SIZE);
       const correctQuesses = data.reduce((acc, record) => {
         const guess = classifier.classify(record.SentimentText);
@@ -55,7 +55,7 @@ module.exports = (batchSize, parallel) => {
     const singleThreadTraining = () => {
       try {
         classifier.train();
-        console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+        console.log(`Training Finished within ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
         test();
         resolve(classifier);
       } catch (err) {
@@ -74,7 +74,7 @@ module.exports = (batchSize, parallel) => {
         if (result !== true) {
           return reject(result);
         }
-        console.log(`Training Finished with ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+        console.log(`Training Finished within ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
         test();
         resolve(classifier);
       });
