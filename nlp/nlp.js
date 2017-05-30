@@ -1,4 +1,5 @@
 const os = require('os');
+const fs = require('fs');
 let startTime = Date.now();
 console.log('Parsing JSON dataset');
 const dataset = require('./data/dataset.json');
@@ -32,10 +33,9 @@ const shuffle = (a) => a.sort(() => (0.5 - Math.random()));
 let classifier;
 
 const test = () => {
-  const batchSize = 500;
-  const testIndexes = getRandomIndexes(500, dataset.length);
+  const testIndexes = getRandomIndexes(TEST_BATCH_SIZE, dataset.length);
 
-  console.log(`Model has been trained with ${batchSize} training records, trying to predict ${TEST_BATCH_SIZE} test examples`);
+  console.log(`Model has been trained, trying to predict ${TEST_BATCH_SIZE} test examples`);
   const data = testIndexes.map(idx => dataset[idx]);
   const correctQuesses = data.reduce((acc, record) => {
     const guess = classifier.classify(record.SentimentText);
@@ -101,13 +101,13 @@ const train = (dataset) => {
 
 };
 
-module.exports.create = (batchSize) => {
+const create = (batchSize) => {
   classifier = new natural.BayesClassifier();
   const data = dataset.slice(0, batchSize);
   return train(data);
 };
 
-module.exports.save = (classifier) => {
+const save = () => {
   return new Promise((resolve, reject) => {
     classifier.save(fileToSave, (err, result) => {
       if (err) {
@@ -119,7 +119,7 @@ module.exports.save = (classifier) => {
   });
 };
 
-module.exports.restore = (batchSize) => {
+const restore = (batchSize) => {
   startTime = Date.now();
   console.log(`Start restoring model`);
   const restoredModel = require(fileToSave);
@@ -128,4 +128,12 @@ module.exports.restore = (batchSize) => {
   console.log(`Model has been restored in ${((Date.now() - startTime) / 1000).toFixed(2)} seconds`);
   const data = dataset.slice(offset, offset + batchSize);
   return train(data);
+};
+
+module.exports.run = (batchSize) => {
+  const promise = fs.existsSync(fileToSave) ? restore(batchSize) : create(batchSize);
+  return promise.then(model => {
+    save();
+    return model;
+  })
 };

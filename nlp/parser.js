@@ -1,32 +1,36 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 
+const encoding = 'utf-8';
+
 const saveToJSON = (dataset) => {
   const writeStream = fs.createWriteStream('./data/dataset.json', {flags: 'w'});
 
+  const startTime = Date.now();
   console.log('Start writing file');
   let i = 0;
 
   const writeData = (data, cb) => {
-    if (!writeStream.write(data)) {
-      writeStream.once('drain', cb)
+    if (!writeStream.write(data, encoding)) {
+      writeStream.once('drain', cb);
     } else {
-      process.nextTick(cb)
+      process.nextTick(cb);
     }
   };
 
   const write = () => {
     console.log(' rows left', dataset.length - i);
+    const dataToWrite = JSON.stringify(dataset[i]) + ',\r\n';
     if (i === 0) {
-      writeData('['+ ',\r\n'  + JSON.stringify(dataset[i]) + ',\r\n', 'utf-8', write);
+      writeData('[' + '\r\n' + dataToWrite, write);
     } else if (i === (dataset.length - 1)) {
-      writeData(JSON.stringify(dataset[i]) + ',\r\n' + ']', 'utf-8', () => {
+      writeData(JSON.stringify(dataset[i]) + '\r\n' + ']', () => {
         writeStream.end(() => {
-          console.log('Finish writing file');
+          console.log(`Finish writing file in ${((Date.now() - startTime)/1000).toFixed(2)} seconds`);
         });
       });
     } else {
-      writeData(JSON.stringify(dataset[i]) + ',\r\n', 'utf-8', write);
+      writeData(dataToWrite, write);
     }
     i++;
   };
@@ -72,4 +76,4 @@ const getData = (path) => {
   });
 };
 
-getData();
+getData('./data/Sentiment Analysis Dataset.csv');
