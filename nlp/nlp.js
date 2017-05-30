@@ -98,13 +98,15 @@ const create = (batchSize) => {
 };
 
 const save = () => {
+  startTime = Date.now();
+  console.log(`Saving model`);
   return new Promise((resolve, reject) => {
-    classifier.save(fileToSave, (err, result) => {
+    classifier.save(fileToSave, (err) => {
       if (err) {
         return reject(err);
       }
-      console.log('Model has been saved');
-      resolve(result);
+      console.log(`Model has been saved in ${((Date.now() - startTime) / 1000).toFixed(2)} seconds`);
+      resolve(classifier);
     });
   });
 };
@@ -122,8 +124,6 @@ const restore = (batchSize) => {
 
 module.exports.run = (batchSize) => {
   const promise = fs.existsSync(fileToSave) ? restore(batchSize) : create(batchSize);
-  return promise.then(model => {
-    save();
-    return model;
-  })
+  return promise
+    .then(save);
 };

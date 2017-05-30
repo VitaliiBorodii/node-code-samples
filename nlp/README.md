@@ -9,22 +9,13 @@ You should get something like this:
 
 <pre>
 Parsing JSON dataset
-
-Finished parsing JSON in 5.7 seconds
-
-Start adding 50000 training records to model
-
-Finish adding records it took 6.1 seconds
-
-Start training model
-
-Training Finished with 1263.1 seconds
-
-Model has been trained with 50000 training records, trying to predict 500 test examples
-
-Model's precision: 75.40 %
-
-Ready for work in: 1280.2 seconds
-
-Enter the phrase you'd like to analyze: ...
+Finished parsing JSON in 5.96 seconds
+Start adding 10000 training records to model
+Finished adding records in 1.45 seconds
+Training Finished within 53.02 seconds
+Model has been trained, trying to predict 500 test examples
+Model's precision: 69.20 %
+Ready for work in: 48.85 seconds
+Model has 9981 docs
+Enter the phrase you'd like to analyze:...
 </pre>
