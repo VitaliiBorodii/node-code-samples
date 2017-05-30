@@ -7,9 +7,10 @@ const rl = readline.createInterface({
 });
 
 let startTime = Date.now();
-nlp(20000, false)
+nlp.restore(50000)
   .then((model) => {
-    console.log(`Ready for work in: ${((Date.now() - startTime) / 1000).toFixed(1)} seconds`);
+    console.log(`Ready for work in: ${((Date.now() - startTime) / 1000).toFixed(2)} seconds`);
+    console.log(`Model has ${model.docs.length} docs`);
     enterPhrase(model);
   })
   .catch(err => {

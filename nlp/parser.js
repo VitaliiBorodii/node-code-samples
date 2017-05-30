@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 
 const saveToJSON = (dataset) => {
-  const writeStream = fs.createWriteStream('./data/Sentiment_Analysis_Dataset.json', {flags: 'w'});
+  const writeStream = fs.createWriteStream('./data/dataset.json', {flags: 'w'});
 
   console.log('Start writing file');
   let i = 0;
@@ -60,7 +60,7 @@ const getData = (path) => {
         return console.error(err);
       }
       const endTime = Date.now();
-      console.log(`Finish extracting data, it took: ${((endTime - startTime) / 1000).toFixed(1)} seconds`);
+      console.log(`Finish extracting data, it took: ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
       const data = dataset.map(mapper);
       saveToJSON(data);
       resolve(data);
