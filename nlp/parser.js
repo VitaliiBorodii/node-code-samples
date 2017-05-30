@@ -20,17 +20,16 @@ const saveToJSON = (dataset) => {
 
   const write = () => {
     console.log(' rows left', dataset.length - i);
-    const dataToWrite = JSON.stringify(dataset[i]) + ',\r\n';
     if (i === 0) {
-      writeData('[' + '\r\n' + dataToWrite, write);
+      writeData('[' + '\r\n', write); //first row - open array, skip field names
     } else if (i === (dataset.length - 1)) {
-      writeData(JSON.stringify(dataset[i]) + '\r\n' + ']', () => {
+      writeData(JSON.stringify(dataset[i]) + '\r\n' + ']', () => { //last row - close array
         writeStream.end(() => {
           console.log(`Finish writing file in ${((Date.now() - startTime)/1000).toFixed(2)} seconds`);
         });
       });
     } else {
-      writeData(dataToWrite, write);
+      writeData(JSON.stringify(dataset[i]) + ',\r\n', write);
     }
     i++;
   };

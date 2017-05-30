@@ -47,16 +47,6 @@ const test = () => {
   console.log(`Model's precision: ${((100 * correctQuesses) / TEST_BATCH_SIZE).toFixed(2)} %`);
 };
 
-const testData = [
-  'Very good',
-  'Awesome!!!',
-  'Not bad))',
-  'Very bad',
-  'I Love it',
-  'It Sucks',
-  'NOOOOO!!!!'
-];
-
 const singleThreadTraining = (callback) => {
   try {
     classifier.train();
