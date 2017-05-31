@@ -15,16 +15,33 @@ const TEST_BATCH_SIZE = 500;
  * training model took `4787.6 seconds`
  * */
 
-const getRandomIndexes = (num, max) => {
+const getRandomIndexes = (num, min, max) => {
   let map = {};
+  const diff = max - min;
 
-  for (let i = 0; i < num; i++) {
-    let index = Math.floor(Math.random() * max);
-    while (map.hasOwnProperty(index)) {
-      index = Math.floor(Math.random() * max)
+  if (num > (2 * diff)) {
+
+    for (let i = min; i < min + num; i++) {
+      map[i] = 1;
     }
-    map[index] = 1;
+
+  } else if (num > diff) {
+
+    for (let i = min; i < max; i++) {
+      map[i] = 1;
+    }
+
+  } else {
+    for (let i = 0; i < num; i++) {
+      let index = min + Math.floor(Math.random() * diff);
+      while (map.hasOwnProperty(index)) {
+        index = min + Math.floor(Math.random() * diff);
+      }
+      map[index] = 1;
+    }
+
   }
+
   return Object.keys(map)
 };
 
@@ -33,7 +50,8 @@ const shuffle = (a) => a.sort(() => (0.5 - Math.random()));
 let classifier;
 
 const test = () => {
-  const testIndexes = getRandomIndexes(TEST_BATCH_SIZE, dataset.length);
+  const lastUntested = classifier.docs.length; //do not run tests on training records
+  const testIndexes = getRandomIndexes(TEST_BATCH_SIZE, lastUntested, dataset.length);
 
   console.log(`Model has been trained, trying to predict ${TEST_BATCH_SIZE} test examples`);
   const data = testIndexes.map(idx => dataset[idx]);

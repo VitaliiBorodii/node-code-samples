@@ -20,9 +20,9 @@ nlp.run(10000)
   });
 
 const enterPhrase = (model) => {
-  rl.question('Enter the phrase you\'d like to analyze: ', (phrase) => {
-    console.log(`Result: ${model.classify(phrase)}`);
-    console.log(model.getClassifications(phrase));
+  rl.question('Enter the phrase you\'d like to analyze: ', (answer) => {
+    console.log(`Result: ${model.classify(answer)}`);
+    console.log(model.getClassifications(answer));
     enterPhrase(model);
   });
 };
