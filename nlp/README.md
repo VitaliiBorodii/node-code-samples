@@ -1,6 +1,7 @@
 # Negative/positive sentences classifier
 
-Create a `./data` folder and clone ( [Sentiment_Analysis_Dataset.csv](http://thinknook.com/wp-content/uploads/2012/09/Sentiment-Analysis-Dataset.zip) ) file inside of it.
+Create a `./data` folder and clone ( [Sentiment Analysis Dataset.csv](http://thinknook.com/wp-content/uploads/2012/09/Sentiment-Analysis-Dataset.zip) ) file inside of it.
+
 Then run `node parser.js` to convert a dataset into JSON file
 
 `node index.js` - to start nlp module
